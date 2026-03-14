@@ -1,0 +1,29 @@
+name: Release EasyCmd
+on:
+  push:
+    tags:
+      - 'v0.*'
+      - 'draft-*'
+permissions:
+  contents: write
+jobs:
+  publishGitRelease:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
+        with:
+          go-version: '^1.25'
+          check-latest: true
+      - name: Cross compile
+        run: |
+          sudo apt-get install rhash -y
+          go install github.com/mitchellh/gox@v1.0.1
+          mkdir -p build
+          ./scripts/xcompile.sh
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/*
+          draft: true
+          fail_on_unmatched_files: true
