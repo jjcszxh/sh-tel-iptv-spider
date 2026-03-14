@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 set -e
 # you may need to go install github.com/mitchellh/gox@v1.0.1 first
 echo $VERSION
