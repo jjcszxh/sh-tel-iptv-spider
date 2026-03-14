@@ -1,11 +1,12 @@
 package api
 
 import (
-	"github.com/kataras/iris/v12"
 	"iptv-spider-sh/global"
 	"iptv-spider-sh/modules/auth"
 	"iptv-spider-sh/utils"
 	"time"
+
+	"github.com/kataras/iris/v12"
 )
 
 func InitApiRouters(rg iris.Party) {
