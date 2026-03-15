@@ -11,10 +11,10 @@ echo "Building $PROJECT_NAME, version: $VERSION"
 mkdir -p build
 
 # 使用 gox 进行交叉编译，指定要编译的操作系统和架构
-# 针对 Linux 64 位, Windows 64 位（amd64）, Windows 32 位（386）, Windows ARM64（arm64）
+# 针对 Linux 64 位, Linux 32 位, Windows 64 位, Windows 32 位, Linux ARM 32 位, Linux ARM 64 位
 CGO_ENABLED=0 gox -ldflags "-s -w ${LDFLAGS}" \
   -output="build/${PROJECT_NAME}_{{.OS}}_{{.Arch}}" \
-  --osarch="linux/amd64 windows/amd64 windows/386 windows/arm64"
+  --osarch="linux/amd64 linux/386 windows/amd64 windows/386 linux/arm linux/arm64"
 
 # 进入 build 目录
 cd build
