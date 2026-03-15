@@ -39,6 +39,11 @@ func GenerateM3u8(udpxy, scheme, xteve, all string) []byte {
 		global.DB.Where("comm_name = ?", info.CommName).
 			Find(&m3u8Mapping)
 
+		// 如果没有 logo，就使用本地 logo
+		if m3u8Mapping.Logo == "" {
+			m3u8Mapping.Logo = fmt.Sprintf("http://127.0.0.1:8888/api/logo/%s.png", info.CommName)
+		}
+
 		if all != "true" && (m3u8Mapping.AutoGroups == "购物" ||
 			m3u8Mapping.CustomGroups == "购物") {
 			continue
