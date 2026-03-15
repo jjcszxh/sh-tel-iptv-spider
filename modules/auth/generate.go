@@ -58,7 +58,7 @@ func GenerateM3u8(udpxy, scheme, xteve, all string) []byte {
 			// 去掉数据库里的 rtsp:// 前缀
 			trimmed := strings.TrimPrefix(channel.TimeShiftURL, "rtsp://")
 			// 拼接固定前缀
-			catchupSource = "http://192.168.0.9:5140/rtsp/" + trimmed + "&playseek={utc:YmdHMS}-{utcend:YmdHMS}"
+			catchupSource = fmt.Sprintf("%s%s&playseek={utc:YmdHMS}-{utcend:YmdHMS}", global.CONFIG.Epg.RtspUrl, trimmed)
 		}
 
 		// 使用新的方法写入EXTINF
@@ -99,7 +99,6 @@ func GenerateTimeShiftM3u8() []byte {
 
 // func assemblyUrl(udpxy, scheme, xteve, uri string) string //修改
 func assemblyUrl(udpxy, scheme, xteve, uri, fccIp, fccPort string) string {
-
 	u, _ := url.Parse(uri)
 
 	// xteve模式
@@ -112,19 +111,21 @@ func assemblyUrl(udpxy, scheme, xteve, uri, fccIp, fccPort string) string {
 		return fmt.Sprintf("http://%s/udp/%s", udpxy, u.Host)
 	}
 
-	// HTTP RTP + FCC
+	// HTTP RTP + FCC 使用动态加载的 rtp_url
 	if fccIp != "" && fccPort != "" {
 		return fmt.Sprintf(
-			"http://192.168.0.9:5140/rtp/%s?fcc=%s:%s",
+			"%s%s?fcc=%s:%s",
+			global.CONFIG.Epg.RtpUrl, // 使用动态加载的 rtp_url
 			u.Host,
 			fccIp,
 			fccPort,
 		)
 	}
 
-	// HTTP RTP 无FCC
+	// HTTP RTP 无FCC 使用动态加载的 rtp_url
 	return fmt.Sprintf(
-		"http://192.168.0.9:5140/rtp/%s",
+		"%s%s",
+		global.CONFIG.Epg.RtpUrl, // 使用动态加载的 rtp_url
 		u.Host,
 	)
 }
