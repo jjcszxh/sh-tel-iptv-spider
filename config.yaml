@@ -18,7 +18,8 @@ epg:
   source: 'Shanghai Telecom Iptv Spider'
   xml_url: ''
   fetch_cron: '0 0 8,16,23 * * *'
-
+  rtsp_url: 'http://192.168.0.9:5140/rtsp/'
+  rtp_url: 'http://192.168.0.9:5140/rtp/'
 #oss:
 #  enable: false
 #  upload_cron: '0 20 0,8,16 * * *' # 每天 0，8，16 点 20 分执行
