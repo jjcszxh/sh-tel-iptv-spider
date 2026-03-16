@@ -6,5 +6,6 @@ type Epg struct {
 	XmlUrl    string `mapstructure:"xml_url" json:"xml_url" yaml:"xml_url"`
 	RtspUrl   string `mapstructure:"rtsp_url" json:"rtsp_url" yaml:"rtsp_url"`
 	RtpUrl    string `mapstructure:"rtp_url" json:"rtp_url" yaml:"rtp_url"`
+	LogoUrl   string `mapstructure:"logo_url" json:"logo_url" yaml:"logo_url"`
 	FetchCron string `mapstructure:"fetch_cron" json:"fetch_cron" yaml:"fetch_cron"`
 }
