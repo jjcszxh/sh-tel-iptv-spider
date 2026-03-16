@@ -66,10 +66,10 @@ func (c *Client) FetchChannelList() {
 	}
 	global.LOG.Info(fmt.Sprintf("FetchChannelList Data Length: %d", len(respJson.Data)))
 	for i := range respJson.Data {
-
 		// 避免接口返回 0000-00-00
 		if respJson.Data[i].LastFetchTime.IsZero() {
-			respJson.Data[i].LastFetchTime = time.Now().Add(-5 * time.Hour)
+			// 使用 carbon.Now() 来代替 time.Now()
+			respJson.Data[i].LastFetchTime = carbon.Now().SubHours(5).ToStdTime()
 		}
 
 		global.LOG.Info("FetchChannelList Data:",
