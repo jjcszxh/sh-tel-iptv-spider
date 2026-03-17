@@ -22,10 +22,15 @@ func GenerateM3u8(udpxy, scheme, xteve, all string) []byte {
 
 	// 查询数据库
 	var channelInfoList []model.ChannelInfo
-	global.DB.Order("mix_no asc").
-		Find(&channelInfoList)
+
+	global.DB.Order("mix_no asc").Find(&channelInfoList)
+	fmt.Println("查询到的频道数量:", len(channelInfoList))
 	// 去重
 	newChanInfo := model.RemoveDuplicateChannelInfo(channelInfoList)
+	// 输出去重后的频道数量和信息
+	fmt.Println("去重后的频道数量:", len(newChanInfo))
+	//fmt.Println("去重后的频道信息:", newChanInfo)
+
 	for _, info := range newChanInfo {
 		// 不展示
 		if !info.IsShow {
@@ -50,10 +55,10 @@ func GenerateM3u8(udpxy, scheme, xteve, all string) []byte {
 			m3u8Mapping.Logo = fmt.Sprintf("%s%s", logoBaseUrl, logoImageName)
 		}
 
-		if all != "true" && (m3u8Mapping.AutoGroups == "购物" ||
-			m3u8Mapping.CustomGroups == "购物") {
-			continue
-		}
+		//if all != "true" && (m3u8Mapping.AutoGroups == "购物" ||
+		//	m3u8Mapping.CustomGroups == "购物") {
+		//	continue
+		//}
 		//uri := assemblyUrl(udpxy, scheme, xteve, channel.ChannelURL)//修改
 		uri := assemblyUrl(
 			udpxy,
