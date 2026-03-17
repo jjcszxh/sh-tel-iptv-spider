@@ -1,12 +1,13 @@
 package model
 
 import (
-	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
+
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type ChannelInfo struct {
@@ -55,6 +56,7 @@ func (h *ChannelInfo) updateMapping(tx *gorm.DB) {
 		return
 	}
 	var groups []string
+	// 根据 CommName 或 Name 设置分组
 	if strings.Contains(h.CommName, "CCTV") {
 		groups = append(groups, "央视")
 	} else if strings.Contains(h.Name, "卫视") {
@@ -65,7 +67,13 @@ func (h *ChannelInfo) updateMapping(tx *gorm.DB) {
 		groups = append(groups, "空中课堂")
 	} else if strings.Contains(h.Name, "百事通") {
 		groups = append(groups, "百事通")
+	} else if strings.Contains(h.Name, "影") {
+		groups = append(groups, "电影")
+	} else {
+		// 如果没有匹配到任何分组，归为 "其他"
+		groups = append(groups, "其他")
 	}
+
 	tx.Clauses(clause.OnConflict{
 		Columns:   []clause.Column{{Name: "comm_name"}},
 		DoUpdates: clause.AssignmentColumns([]string{"auto_groups"}),
@@ -91,6 +99,8 @@ func RemoveDuplicateChannelInfo(in []ChannelInfo) []ChannelInfo {
 	newMap := make(map[string]ChannelInfo, len(in))
 	for _, child := range in {
 		if ch, ok := newMap[child.CommName]; ok {
+			// 打印出重复的 CommName 和替换前后的信息
+			//fmt.Printf("去重: %s, 旧数据: %+v, 新数据: %+v\n", child.CommName, ch, child)
 			// 判断能否替换
 			newMap[child.CommName] = check(ch, child)
 			continue
