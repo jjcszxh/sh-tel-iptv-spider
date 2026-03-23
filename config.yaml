@@ -31,16 +31,37 @@ epg:
   playseek: "&playseek={utc:YmdHMS}-{utcend:YmdHMS}"
   #自定义获取频道，针对节目单列表没有的频道
   channel_mappings:
-    - id: '2'                              #tvg-id
+    - id: '721'                            #tvg-id
       igmp: 'igmp://233.18.204.169:5140'  #组播地址                           
       name: "BesTV4K电影"                 #定义名称 #tvg-name
       logo: "BesTV4K电影.png"             #定义图片名称
       group: "BesTV4K电影"                #显示名称
-    - id: '1'                              #tvg-id
-      igmp: 'igmp://233.18.204.169:514'  #组播地址                           
-      name: "BesTV4K电影测试"                 #定义名称 #tvg-name
-      logo: "BesTV4K电影测试.png"             #定义图片名称
-      group: "BesTV4K电影测试" 
+    - id: '723'                           #tvg-id
+      igmp: 'igmp://233.18.204.171:5140'  #组播地址                           
+      name: "BesTV4K动画"                 #定义名称 #tvg-name
+      logo: "BesTV4K动画.png"             #定义图片名称
+      group: "BesTV4K动画" 
+    - id: '722'                           #tvg-id
+      igmp: 'igmp://233.18.204.170:5140'  #组播地址                           
+      name: "BesTV4K记录"                 #定义名称 #tvg-name
+      logo: "BesTV4K记录.png"             #定义图片名称
+      group: "BesTV4K记录" 
+    - id: '198'                           #tvg-id
+      igmp: 'igmp://233.18.204.116:5140'  #组播地址                           
+      name: "BesTV电影介绍"                #定义名称 #tvg-name
+      logo: "BesTV电影介绍.png"            #定义图片名称
+      group: "BesTV电影介绍" 
+
+#排序表
+  name_sequence: 
+    - name: "BesTV4K电影"
+    - name: "BesTV4K动画"
+    - name: "BesTV4K记录"
+    - name: "BesTV电影介绍"
+    - name: "CCTV16"
+    - name: "CCTV4K"
+    - name: "欢笑剧场4K"
+    - name: "测试"
 
 #oss:
 #  enable: false
