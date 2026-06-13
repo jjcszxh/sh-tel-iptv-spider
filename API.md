@@ -16,11 +16,12 @@
 | 4 | `GET /api/run` | 手动触发任务 |
 | 5 | `GET /api/network-check` | 网络连通性检查 |
 | 6 | `GET /api/version-check` | 版本更新检查 |
-| 7 | `GET /api/status.html` | 状态监控页面 |
-| 8 | `GET /api/m3u8` | M3U 播放列表 |
-| 9 | `GET /api/channel/m3u8` | 单频道 M3U8 |
-| 10 | `GET /api/epg` | XMLTV 节目单 |
-| 11 | `GET /api/log/stream` | SSE 实时日志流 |
+| 7 | `GET /api/self-upgrade` | 远程一键升级 |
+| 8 | `GET /api/status.html` | 状态监控页面 |
+| 9 | `GET /api/m3u8` | M3U 播放列表 |
+| 10 | `GET /api/channel/m3u8` | 单频道 M3U8 |
+| 11 | `GET /api/epg` | XMLTV 节目单 |
+| 12 | `GET /api/log/stream` | SSE 实时日志流 |
 
 ---
 
@@ -188,22 +189,81 @@ GET /api/version-check
   "current": "V0.0.8",
   "latest": "V0.0.9",
   "has_update": true,
-  "url": "https://gitee.com/jjcszxh/sh-tel-iptv-spider/releases"
+  "url": "https://github.com/jjcszxh/sh-tel-iptv-spider/releases"
 }
 ```
 
 | 字段 | 说明 |
 |------|------|
 | `current` | 当前程序版本 |
-| `latest` | 远端最新版本（从 `version.txt` 读取） |
+| `latest` | 远端最新版本（从 GitHub 仓库 `version.txt` 读取） |
 | `has_update` | 是否有新版本可用 |
-| `url` | 下载页面地址 |
+| `url` | GitHub Releases 页面地址 |
 
-> 结果缓存 **5 分钟**，避免频繁请求远端。当 `has_update` 为 `true` 时，Web 页面底部会闪烁提示。
+> 结果缓存 **5 分钟**，避免频繁请求远端。当 `has_update` 为 `true` 时，Web 页面底部会闪烁提示并提供一键升级按钮。
 
 ---
 
-## 7. 状态监控页面
+## 7. 远程一键升级
+
+```
+GET /api/self-upgrade
+```
+
+**功能**：从 GitHub Release 下载最新版本二进制文件，校验后替换当前程序并重启。
+
+**返回示例（成功）：**
+
+```json
+{
+  "success": true,
+  "message": "升级成功 V0.0.8 -> V0.0.9，程序将在 1 秒后重启",
+  "step": "done",
+  "version": "V0.0.9"
+}
+```
+
+**返回示例（失败 - 已是最新）：**
+
+```json
+{
+  "success": false,
+  "message": "已经是最新版本 V0.0.9",
+  "step": "check"
+}
+```
+
+**返回示例（失败 - 下载404）：**
+
+```json
+{
+  "success": false,
+  "message": "下载失败: HTTP 404",
+  "step": "download",
+  "version": "V0.0.9"
+}
+```
+
+| 字段 | 说明 |
+|------|------|
+| `success` | 是否升级成功 |
+| `message` | 详细说明信息 |
+| `step` | 当前步骤（`check` / `download` / `verify` / `save` / `backup` / `replace` / `done`） |
+| `version` | 目标版本号 |
+
+**升级流程：**
+
+1. 调用 `/api/version-check` 判断是否有新版本
+2. 从 GitHub Release 下载对应平台的二进制文件（3次重试，超时5分钟）
+3. 校验文件头（Linux: ELF 头 `0x7F E L F`，Windows: PE 头 `MZ`）
+4. 备份当前程序 → 替换为新文件
+5. 程序退出，由进程管理器（如 procd）自动重启
+
+> ⚠️ 升级过程会退出当前进程，依赖外部进程管理器自动重启。建议配合 procd（OpenWrt）或 systemd 使用。下载限 50MB，文件不完整或校验失败会自动回滚。
+
+---
+
+## 8. 状态监控页面
 
 ```
 GET /api/status.html
@@ -225,7 +285,7 @@ GET /api/status.html
 
 ---
 
-## 8. M3U 播放列表
+## 9. M3U 播放列表
 
 ```
 GET /api/m3u8?<参数>
@@ -255,7 +315,7 @@ GET /api/m3u8?<参数>
 
 ---
 
-## 9. 单频道 M3U8
+## 10. 单频道 M3U8
 
 ```
 GET /api/channel/m3u8?name=<频道名>
@@ -285,7 +345,7 @@ igmp://233.18.204.1:5140
 
 ---
 
-## 10. XMLTV 节目单
+## 11. XMLTV 节目单
 
 ```
 GET /api/epg?<参数>
@@ -309,7 +369,7 @@ GET /api/epg?<参数>
 
 ---
 
-## 11. SSE 实时日志流
+## 12. SSE 实时日志流
 
 ```
 GET /api/log/stream
