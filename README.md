@@ -8,9 +8,10 @@
 
 # 📺 sh-tel-iptv-spider
 
+![](demo.gif)
+
 上海电信 IPTV 抓取程序 —— 自动抓取 **EPG 节目单** 与 **M3U8 播放地址**，并写入 MySQL。
 
-![](demo.gif)
 ---
 
 ## ⚠️ 使用须知
@@ -80,6 +81,7 @@ ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 | 🎬 M3U8 地址 | 生成播放列表，支持自定义频道映射 |
 | 🗄️ 数据持久化 | 全部写入 MySQL 数据库 |
 | 🌐 Web 监控 | 内置状态页面，支持在线查看频道、下载 M3U8/EPG |
+| 📡 API 接口 | 完整 REST API，详见 [API.md](API.md) |
 
 ---
 
