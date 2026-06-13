@@ -7,10 +7,9 @@
 </div>
 
 # 📺 sh-tel-iptv-spider
+上海电信 IPTV 抓取程序 —— 自动抓取 **EPG 节目单** 与 **M3U8 播放地址**，并写入 MySQL。
 
 ![](demo.gif)
-
-上海电信 IPTV 抓取程序 —— 自动抓取 **EPG 节目单** 与 **M3U8 播放地址**，并写入 MySQL。
 
 ---
 
