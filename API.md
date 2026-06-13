@@ -14,11 +14,13 @@
 | 2 | `GET /api/schedule` | 定时任务调度 |
 | 3 | `GET /api/requests` | 最近请求记录 |
 | 4 | `GET /api/run` | 手动触发任务 |
-| 5 | `GET /api/status.html` | 状态监控页面 |
-| 6 | `GET /api/m3u8` | M3U 播放列表 |
-| 7 | `GET /api/channel/m3u8` | 单频道 M3U8 |
-| 8 | `GET /api/epg` | XMLTV 节目单 |
-| 9 | `GET /api/log/stream` | SSE 实时日志流 |
+| 5 | `GET /api/network-check` | 网络连通性检查 |
+| 6 | `GET /api/version-check` | 版本更新检查 |
+| 7 | `GET /api/status.html` | 状态监控页面 |
+| 8 | `GET /api/m3u8` | M3U 播放列表 |
+| 9 | `GET /api/channel/m3u8` | 单频道 M3U8 |
+| 10 | `GET /api/epg` | XMLTV 节目单 |
+| 11 | `GET /api/log/stream` | SSE 实时日志流 |
 
 ---
 
@@ -143,7 +145,65 @@ GET /api/run?task=<任务名>
 
 ---
 
-## 5. 状态监控页面
+## 5. 网络连通性检查
+
+```
+GET /api/network-check
+```
+
+**返回示例：**
+
+```json
+{
+  "internet": "ok",
+  "internet_ms": 35,
+  "iptv": "ok",
+  "iptv_ms": 12,
+  "message": "外网正常(35ms)，IPTV专网正常(12ms)"
+}
+```
+
+| 字段 | 说明 | 可能值 |
+|------|------|--------|
+| `internet` | 外网连通状态 | `ok` / `fail` |
+| `internet_ms` | 外网延迟（毫秒） | 数字 |
+| `iptv` | IPTV 专网连通状态 | `ok` / `fail` |
+| `iptv_ms` | IPTV 专网延迟（毫秒） | 数字 |
+| `message` | 汇总描述信息 | 字符串 |
+
+> 外网检测 `www.baidu.com:80`，IPTV 专网检测 `config.yaml` 中 `stb.auth_host` 配置的地址。
+
+---
+
+## 6. 版本更新检查
+
+```
+GET /api/version-check
+```
+
+**返回示例：**
+
+```json
+{
+  "current": "V0.0.8",
+  "latest": "V0.0.9",
+  "has_update": true,
+  "url": "https://gitee.com/jjcszxh/sh-tel-iptv-spider/releases"
+}
+```
+
+| 字段 | 说明 |
+|------|------|
+| `current` | 当前程序版本 |
+| `latest` | 远端最新版本（从 `version.txt` 读取） |
+| `has_update` | 是否有新版本可用 |
+| `url` | 下载页面地址 |
+
+> 结果缓存 **5 分钟**，避免频繁请求远端。当 `has_update` 为 `true` 时，Web 页面底部会闪烁提示。
+
+---
+
+## 7. 状态监控页面
 
 ```
 GET /api/status.html
@@ -156,14 +216,16 @@ GET /api/status.html
 - 自定义频道高亮显示
 - 点击频道名弹出 M3U8 预览弹窗（支持复制）
 - 一键下载 M3U8 / EPG
+- 网络连通性检查（含实时终端输出）
 - 手动触发更新（含实时终端输出）
 - SSE 实时日志流
 - 最近请求记录
 - 暗黑模式切换
+- 版本更新提示
 
 ---
 
-## 6. M3U 播放列表
+## 8. M3U 播放列表
 
 ```
 GET /api/m3u8?<参数>
@@ -193,7 +255,7 @@ GET /api/m3u8?<参数>
 
 ---
 
-## 7. 单频道 M3U8
+## 9. 单频道 M3U8
 
 ```
 GET /api/channel/m3u8?name=<频道名>
@@ -223,7 +285,7 @@ igmp://233.18.204.1:5140
 
 ---
 
-## 8. XMLTV 节目单
+## 10. XMLTV 节目单
 
 ```
 GET /api/epg?<参数>
@@ -247,7 +309,7 @@ GET /api/epg?<参数>
 
 ---
 
-## 9. SSE 实时日志流
+## 11. SSE 实时日志流
 
 ```
 GET /api/log/stream
