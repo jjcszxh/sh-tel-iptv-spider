@@ -1,0 +1,72 @@
+# system configuration
+system:
+  env: 'public'
+  addr: '0.0.0.0:8888' # 监听地址
+  db-type: 'mysql'
+  #oss-type: 'minio' # 可选值：minio、cos
+
+stb:
+  uid: 'xxxxxxxx@xxxx'     # IPTV 用户名，打开你的iptv机顶盒，打开用户
+  mac: 'xx:xx:x:xx:xx:xx' # 机顶盒Mac地址 
+  sn: 'xxxxxxxxxxxxxxxxxxxxxxxxxx' # 机顶盒SN码 
+  ip: '30.181.229.221' # 专网IP地址（请求参数，写死不需要改）
+  type: 'B860' # 机顶盒型号
+  auth_host: '222.68.208.73:7001'           # 认证服务器地址
+  # OpenWrt SSH 配置（可选），用于自动检测 IPTV 专网接口 IP 变化并触发重认证
+  # 配置后，每 5 分钟 SSH 到 OpenWrt 检测 DHCP IP 是否变化，变化则自动重认证
+  openwrt_host: '192.168.x.x'         # OpenWrt 路由器 IP，如 192.168.1.1
+  openwrt_port: 22         # SSH 端口，默认 22
+  openwrt_user: 'xxxx'     # SSH 用户名
+  openwrt_pass: 'xxxxx'         # SSH 密码
+  openwrt_if: 'wan.85'       # IPTV 专网接口名称，如 eth0.85、iptv、pppoe-iptv
+
+
+#相关api
+#例子
+#http://192.168.0.131:8888/api/m3u8
+#http://192.168.0.131:8888/api/epg
+#http://192.168.0.131:8888/api/schedule
+# EPG 配置已迁移至 Web 界面管理（/api/epg/config），首次启动时自动初始化默认值
+
+oss:
+  enable: false
+  upload_cron: '0 20 0,8,17 * * *'
+  endpoint: 'xxx.com'
+  use-ssl: false
+  bucket: 'epg'
+  access-key: 'xxxxxxxxx'
+  secret-key: 'xxxxxxxxx'
+
+# redis configuration
+redis:
+  db: 0
+  addr: '10.0.0.10:6379'
+  password: ''
+
+cache:
+  type: memory    # memory、redis
+  prefix: 'CM'
+  memory_interval: 60        # 使用内存缓存时生效, 内存回收间隔
+  default_timeout: 240       # 默认缓存时间 单位：分钟
+
+# mysql connect configuration
+mysql:
+  path: '192.168.0.xxx:xxxx'
+  config: 'parseTime=True'
+  db-name: 'xxxxxxxxxxxxxxx'
+  username: 'xxxxxxxx'
+  password: 'xxxxxxxxxx'
+  max-idle-conns: 10
+  max-open-conns: 100
+  log-mode: 'error'
+  log-zap: false
+# zap logger configuration
+zap:
+  format: 'console'
+  prefix: '[iptv-spider-sh]'
+  director: 'log'
+  link-name: 'latest_log'
+  show-line: false
+  encode-level: 'LowercaseColorLevelEncoder'
+  stacktrace-key: 'stacktrace'
+  log-in-console: false
